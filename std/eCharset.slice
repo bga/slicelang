@@ -1,0 +1,1 @@
+version("2011.10.02")my _u = #(charCode: Int){  -> String() = [charCode]}export enum {  NULL  = _u(0x00),  TAB   = _u(0x09),  LF    = _u(0x0a), // line feed  CR    = _u(0x0d), // carrage return}

@@ -1,0 +1,19 @@
+version('21.10.2011')
+
+/**
+  Earth's time decomposition
+*/
+export my Time = slice {
+  my guarded(#{ -> 0 <= $ && $ < 60 }) &second: Int = 0
+  my guarded(#{ -> 0 <= $ && $ < 60 }) &minute: Int = 0
+  my guarded(#{ -> 0 <= $ && $ < 24 }) &hour: Int = 0
+  
+  method &_fromTimeStamp(timeStamp: Int), personal {
+    @second = timeStamp % 60
+    @minute = (timeStamp / 60) % 60
+    @hour = (timeStamp / 60 / 60) % 24
+  }
+  method _toTimeStamp() -> Int, personal {
+    -> @second + 60 * (@minute + 60 * @hour)
+  }
+}

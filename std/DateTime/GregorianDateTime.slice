@@ -1,0 +1,56 @@
+version('21.10.2011')
+
+my SECONDS_IN_DAY = 24 * 60 * 60
+my SECONDS_IN_YEAR = 365.2425 * SECONDS_IN_DAY
+my monthLens = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+my leapYearMonthLens = (#{ 
+  copy &monthLens 
+  monthLens[1]++
+  -> monthLens 
+})()
+
+my continualMonthLens: Ordered
+my leapYearContinualMonthLens: Ordered
+using (mixin(Ordered) {
+  method _partialSums(
+    match(#{ -> Assign & AddMonoid <= to.Value && to.Value <= @Value }) to: Fillable
+  ) -> ext to
+  {
+    my &sum: AddMonoid & Assign = to.Value().zero
+    @_forwardEach(#(x: AddMonoid & Assign){ to._add((sum += x)._copy()) })
+  }
+}) {
+  continualMonthLens = monthLens._partialSums(CArray(&CInt)())
+  leapYearContinualMonthLens = leapYearMonthLens._partialSums(CArray(&CInt)())
+}
+
+export my GregorianDateTime = slice limits(Time) {
+  
+  my &year: Int = 0
+  my guarded(#{ -> 0 <= $ && $ < 12 }) &month: Int = 0
+  my guarded(#{ -> 0 <= $ && $ < @daysCountInMonth }) &day: Int = 0
+
+  get leapYear() -> Bool { -> @year % 400 == 0 || (@year % 100 != 0 && @year % 4 == 0) }
+  get daysCountInMonth() -> Int { -> (@month == 1 && @leapYear()) ? 29 : monthLens[@month] }
+  get daysCountInYear() -> Int { -> (@leapYear()) ? 366 : 365 }
+  private get currentContinualMonthLens() -> Ordered { 
+    -> (@leapYear) ? leapYearContinualMonthLens : continualMonthLens 
+  }
+  
+  update method &_fromTimeStamp(timeStamp: Int) {
+    @_super(timeStamp % SECONDS_IN_DAY)
+    
+    @year = timeStamp / SECONDS_IN_YEAR
+    my rest = timeStamp % millisecondsInYear
+    my daysCount = rest / SECONDS_IN_DAY
+    my currentContinualMonthLens = @currentContinualMonthLens
+    @month = currentContinualMonthLens._binaryFindLowerBound(daysCount).pos
+    @day = daysCount - currentContinualMonthLens[@month]
+  }
+  update method _toTimeStamp() -> Int {
+    -> SECONDS_IN_DAY * (@day + @currentContinualMonthLens[@month]) +
+      SECONDS_IN_YEAR * @year +
+      @_super()
+    ;  
+  }
+}
