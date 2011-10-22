@@ -16,4 +16,7 @@ Slicelang has also other modern features:
   + full type algebra
   + extreme DRY standard library
   + simple but powerfull versioning system
-  
+<ul>
+  <li>1
+  <li>2
+</ul>  
