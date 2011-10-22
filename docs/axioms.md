@@ -1,5 +1,5 @@
 Axioms is kind of unit test. Its collects live data of type and apply data to axiom's fn in random order. If test is failed - throw {AxiomFailedError}. Its direct interpretation of math axiom and generally used in math types such as AddAbelianGroup
-{    
+```    
     my AddGroupoid = slice {
       operator('x += y') (){ abstract }
     }
@@ -19,4 +19,4 @@ Axioms is kind of unit test. Its collects live data of type and apply data to ax
     my b = '2' // axiom(a, a, b)
     my c = '3' // axiom(a, b, c)
     my d = '4' // axiom(b, c, d)
-}    
+```    
