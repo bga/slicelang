@@ -6,7 +6,7 @@ Slicelang(working, not final, name) is platform independeble general purpose pro
   <li>force immutable data
   <li>force copy data rather then use ref
   <li>per data guards, input/output guards
-  <li>type axioms
+  <li><a href=https://github.com/bga/slicelang/blob/master/docs/axioms.md>type axioms
   <li>functional way working with collections rather then plain loops
   <li>per function unit test as part of function's spec directly in code
   <li>code prove system
