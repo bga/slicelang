@@ -1,27 +1,31 @@
-version('21.10.2011')
+version('23.10.2011')
+
+/*
+  http://en.wikipedia.org/wiki/Gregorian_calendar
+*/  
 
 my SECONDS_IN_DAY = 24 * 60 * 60
 my SECONDS_IN_YEAR = 365.2425 * SECONDS_IN_DAY
 my monthLens = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 my leapYearMonthLens = (#{ 
-  copy &monthLens 
+  copy &monthLens
   monthLens[1]++
   -> monthLens 
 })()
 
-my continualMonthLens: Ordered
-my leapYearContinualMonthLens: Ordered
-using (mixin(Ordered) {
+my continualMonthLens: OrderedCollection
+my leapYearContinualMonthLens: OrderedCollection
+using (mixin(OrderedCollection) {
   method _partialSums(
-    match(#{ -> Assign & AddMonoid <= to.Value && to.Value <= @Value }) to: Fillable
+    match(#{ -> Assignable & AddMonoid <= to.Value && to.Value <= @Value }) &to: FillableCollection
   ) -> ext to
   {
-    my &sum: AddMonoid & Assign = to.Value().zero
-    @_forwardEach(#(x: AddMonoid & Assign){ to._add((sum += x)._copy()) })
+    my &sum: AddMonoid & Assignable = to.Value().zero
+    @_forwardEach(#(x: AddMonoid & Assignable){ to._add((sum += x)._copy()) })
   }
 }) {
-  continualMonthLens = monthLens._partialSums(CArray(&CInt)())
-  leapYearContinualMonthLens = leapYearMonthLens._partialSums(CArray(&CInt)())
+  continualMonthLens = monthLens._partialSums(CTArray(&Int)())
+  leapYearContinualMonthLens = leapYearMonthLens._partialSums(CTArray(&Int)())
 }
 
 export my GregorianDateTime = slice limits(Time) {
@@ -33,7 +37,7 @@ export my GregorianDateTime = slice limits(Time) {
   get leapYear() -> Bool { -> @year % 400 == 0 || (@year % 100 != 0 && @year % 4 == 0) }
   get daysCountInMonth() -> Int { -> (@month == 1 && @leapYear()) ? 29 : monthLens[@month] }
   get daysCountInYear() -> Int { -> (@leapYear()) ? 366 : 365 }
-  private get currentContinualMonthLens() -> Ordered { 
+  private get currentContinualMonthLens() -> OrderedCollection { 
     -> (@leapYear) ? leapYearContinualMonthLens : continualMonthLens 
   }
   
@@ -41,7 +45,7 @@ export my GregorianDateTime = slice limits(Time) {
     @_super(timeStamp % SECONDS_IN_DAY)
     
     @year = timeStamp / SECONDS_IN_YEAR
-    my rest = timeStamp % millisecondsInYear
+    my rest = timeStamp % SECONDS_IN_YEAR
     my daysCount = rest / SECONDS_IN_DAY
     my currentContinualMonthLens = @currentContinualMonthLens
     @month = currentContinualMonthLens._binaryFindLowerBound(daysCount).pos
