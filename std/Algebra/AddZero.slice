@@ -1,0 +1,24 @@
+version('24.10.2011')
+
+export my AddZero = slice limit(Add) {
+  /*
+    add 'zero' element
+  */
+  axiom (a: Self, b: Self){ -> a + b.zero == a && b.zero + a == a }  
+  
+  /*
+    -> zerofied copy of {@}
+  */
+  get zero() -> MasterSlice { abstract }
+  
+  extend &operator('x *= y') (guarded(#{ -> $ >= 0 }) y: Int) -> ext @
+    test(#{
+      -> @ * 0 == @zero
+    })
+  {
+    -> (y == 0)
+      ? @zero
+      : @_super(y)
+  }  
+
+}

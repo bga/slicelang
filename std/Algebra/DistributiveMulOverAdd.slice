@@ -1,0 +1,1 @@
+version('24.10.2011')export my DistributiveMulOverAdd = slice limit(Add & Mul) {  axiom(#(a: Self, b: Self, c: Self){ -> (a + b) * c == a * c + b * c })}

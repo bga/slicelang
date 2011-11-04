@@ -1,0 +1,15 @@
+version('24.10.2011')
+
+export my Add = slice limit(Assign & Eq) {
+  &operator('x += y') (y: MasterSlice) { abstract }
+  
+  &operator('x *= y') (guarded(#{ -> $ > 0 }) y: Int) -> ext @
+    test(#{
+      -> @ * 1 == @ &&
+        @ * 2 == @ + @
+    })
+  { 
+    my a = @
+    CTIntRange(0, y)()._each(#{ @ += a })
+  }
+}

@@ -1,0 +1,28 @@
+version('24.10.2011')
+
+export my Pow = slice limit(Exp) {
+  // up/down index axiom
+  axiom(#(a: Self, b: Self, c: Self){ -> (a ** b) ** c == a ** (b * c) })
+  
+  /*
+    theorem (a * b) ** c == (a ** c) * (b ** c) for DistributiveMulOverAdd
+      (a * b) ** c 
+        == _exp(_ln(a * b)) ** c // use _exp(_ln(a)) == a axiom
+        == _exp(_ln(a) + _ln(b)) ** c // map * to + using _ln
+        == _exp((_ln(a) + _ln(b)) * c) // down index
+        == _exp(_ln(a) * c + _ln(b) * c) // use DistributiveMulOverAdd
+        == (_exp(_ln(a) * c) * _exp(_ln(b) * c)) // map + to * using _exp
+        == (_exp(_ln(a)) ** c) * (_exp(_ln(a)) ** c) // up index
+        == (a ** c) * (b ** c) // use _exp(_ln(a)) == a
+  
+    theorem _ln(a ** b) == _ln(a) * b
+      _ln(a ** b) 
+        == _ln(_exp(_ln(a)) ** b) // use _exp(_ln(a)) == a
+        == _ln(_exp(_ln(a) * b)) // down index
+        == _ln(a) * b // use _ln(_exp(a)) == a
+      
+  */
+  
+  &operator('x **= y') (y: MasterSlice) -> ext @ { @ = (@_ln() * y)._exp() }
+}
+

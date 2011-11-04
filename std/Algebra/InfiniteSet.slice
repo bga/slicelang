@@ -1,0 +1,59 @@
+// <!--
+version('27.10.2011') 
+
+// TODO: reduce some axioms as theorems
+export my InfiniteSet = slice limit(Assign & Eq) {
+/* 
+  -->
+  <table>
+    <thead>
+      <tr>
+        <th>
+        <th>~
+        <th>&
+        <th>|
+    <tbody> */
+//    <tr>
+//      <td>~
+//      <td><pre>
+          axiom(#(a){ -> a ~ a == a.emptySet })
+          axiom(#(a, b, c){ -> a ~ b ~ c == a ~ c ~ b })
+          axiom(#(a){ -> a ~ a.emptySet == a })
+          axiom(#(a){ -> a.emptySet ~ a == a.emptySet })
+//      <td><pre>            
+          axiom(#(a, b, c){ -> (a & b) ~ c == (a ~ c) & (b ~ c) })
+          axiom(#(a, b, c){ -> c ~ (a & b) == (c ~ a) | (c ~ b) })
+          axiom(#(a, b, c){ -> (b ~ a) & c == (b & c) ~ a})
+//      <td><pre>            
+          axiom(#(a, b, c){ -> (a | b) ~ c == (a ~ c) | (b ~ c) })
+          axiom(#(a, b, c){ -> c ~ (a | b) == (c ~ a) & (c ~ b) })
+          axiom(#(a, b, c){ -> (b ~ a) | c == (b | c) ~ (a ~ c) })
+//    <tr>
+//      <td>&            
+//      <td>            
+//      <td><pre>            
+          axiom(#(a){ -> a & a == a })
+          axiom(#(a, b, c){ -> (a & b) & c == a & (b & c) })
+          axiom(#(a, b){ -> a & b == b & a })
+          axiom(#(a){ -> a & a.emptySet == a.emptySet })
+//      <td><pre>
+          axiom(#(a, b, c){ -> (a & b) | c == (a & c) | (b & c) })
+          axiom(#(a, b, c){ -> (a | b) & c == (a | c) & (b | c) })
+//    <tr>
+//      <td>|
+//      <td>
+//      <td>
+//      <td><pre>
+          axiom(#(a){ -> a | a == a })
+          axiom(#(a, b, c){ -> (a | b) | c == a | (b | c) })
+          axiom(#(a, b){ -> a | b == b | a })
+          axiom(#(a){ -> a | a.emptySet == a })
+//</table><!--      
+  
+  &operator('x &= y') (y: MasterSlice) -> ext @ { abstract }
+  &operator('x |= y') (y: MasterSlice) -> ext @ { abstract }
+  &operator('x ~= y') (y: MasterSlice) -> ext @ { abstract }
+  &operator('x ^= y') (y: MasterSlice) -> ext @ { @ = (@ | y) ~ (@ & y) }
+  get emptySet() -> MasterSlice { -> @ ~ @ }
+}
+// -->

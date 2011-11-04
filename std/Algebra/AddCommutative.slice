@@ -1,0 +1,5 @@
+version('25.10.2011')
+
+export my AddCommunitative = slice limit(Add) {
+  axiom (a: Self, b: Self){ -> (a + b) == (b + a) }  
+}

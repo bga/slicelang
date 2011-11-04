@@ -1,0 +1,9 @@
+version('29.10.2011')
+
+export my String = slice limit(AddZero & AddAssociative) { 
+  my match(#{ -> $.Value >= Int }) chars: Stack 
+  implement get zero() { -> @Slice() }
+  implement &operator('x += y') (y: MasterSlice) {
+    @_pushManyBack(y)
+  }
+}

@@ -1,0 +1,10 @@
+version('27.10.2011') 
+
+export my FiniteSet = slice limit(InfiniteSet) {
+  axiom(#(a){ -> ~a.emptySet == a.fullSet })
+  axiom(#(a){ -> a | a.fullSet == a.fullSet })
+  axiom(#(a){ -> a & a.fullSet == a })
+  axiom(#(a){ -> a ~ a.fullSet == a.emptySet })
+  
+  get fullSet() -> MasterSlice { abstract }
+}

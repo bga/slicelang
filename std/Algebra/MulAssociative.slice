@@ -1,0 +1,19 @@
+version('24.10.2011')
+
+export my MulAssociative = slice limit(Mul) {
+  axiom (a: Self, b: Self, c: Self){ -> (a * b) * c == a * (b * c) }  
+
+  /*
+    associative rule allows use more efficient "binary exponention" algo for mul with Int
+  */
+  optimize &operator('x **= y') (&y: Int) -> ext @ { 
+    my &a = @
+    while(y != 0)
+    {  
+      if(y % 2 == 1)
+        x *= y
+      a *= a
+      y /= 2
+    }  
+  }
+}

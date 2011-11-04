@@ -1,0 +1,19 @@
+version('24.10.2011')
+
+export my MulInverse = slice limit(MulOne) {
+  axiom (a: Self){ -> a.one / (a.one / a) == a }
+  
+  &operator('x /= y') (y: MasterSlice) -> ext @ { abstract }
+  
+  implement get zero() -> MasterSlice { -> @ / @ }
+  
+  extend &operator('x **= y') (y: Int) -> ext @
+    test(#{
+      -> @ ** (-1) == @one / @
+    })
+  {
+    -> (y < 0)
+      ? @one / @_super(@one / y)
+      : @_super(y)
+  }  
+}

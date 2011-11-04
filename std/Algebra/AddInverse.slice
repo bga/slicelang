@@ -1,0 +1,19 @@
+version('24.10.2011')
+
+export my AddInverse = slice limit(AddZero) {
+  axiom (a: Self){ -> a.zero - (a.zero - a) == a }
+  
+  &operator('x -= y') (y: MasterSlice) -> ext @ { abstract }
+  
+  implement get zero() -> MasterSlice { -> @ - @ }
+  
+  extend &operator('x *= y') (y: Int) -> ext @
+    test(#{
+      -> @ * (-1) == -@
+    })
+  {
+    -> (y < 0)
+      ? -@_super(-y)
+      : @_super(y)
+  }  
+}

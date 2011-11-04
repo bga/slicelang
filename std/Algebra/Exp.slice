@@ -1,0 +1,30 @@
+version('24.10.2011')
+
+/*
+  _exp is fn which map + to * and back (_ln)
+*/
+export my Exp = slice limit(Add & Mul) {
+  // map + to *
+  axiom(#(a: Self, b: Self){ -> (a + b)._exp() == a._exp() * b._exp() })
+  
+  // _ln == _exp ** -1
+  axiom(#(a: Self){ -> a._ln()._exp() == a })
+  
+  /*
+    theorem _exp(0) == 1 for AddZero and MulOne
+      _exp(a) 
+        == _exp(a + 0) // AddZero
+        == _exp(a) * _exp(0) // map + to *
+      but _exp(a) * 1 == _exp(a) // MulOne
+      => _exp(0) == 1
+    theorem _exp(-a) == 1 / _exp(a) for AddInverse and MulInverse
+      1 // MulOne
+        == _exp(0) // AddZero
+        == _exp(a - a) // AddInverse
+        == _exp(a) * _exp(-a) // map + to *
+      => 1 / _exp(a) == _exp(-a) // MulInverse
+  */
+  
+  method _exp() -> MasterSlice { abstract }
+  method _ln() -> MasterSlice { abstract }
+}
